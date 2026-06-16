@@ -5,6 +5,7 @@ export default function App() {
   const [time, setTime] = useState('19:30');
 
   return (
+    <h1 style={{ color: 'red', textAlign: 'center' }}>!!! עכשיו זה בטוח הגרסה החדשה !!!</h1>
     <div style={{ 
       direction: 'rtl', 
       fontFamily: 'Arial, sans-serif', 
