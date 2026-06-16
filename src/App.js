@@ -1,4 +1,3 @@
-@@ -0,0 +1,142 @@
 import React, { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 
