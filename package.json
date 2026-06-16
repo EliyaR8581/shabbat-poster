@@ -1,19 +1,20 @@
+@@ -0,0 +1,19 @@
 {
-  "name": "shabbat-poster",
-  "version": "0.1.0",
+  "name": "react",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "html2canvas": "^1.4.1",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
+  "devDependencies": {
+    "react-scripts": "latest"
   }
 }
