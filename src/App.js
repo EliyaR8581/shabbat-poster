@@ -7,7 +7,7 @@ export default function App() {
   const [bgColor, setBgColor] = useState('#f2f9f1');
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
-  const [logoType, setLogoType] = useState('none'); 
+  const [selectedMovement, setSelectedMovement] = useState('ba');
   const [customLogo, setCustomLogo] = useState('');
   const [schedule, setSchedule] = useState([
     { id: 1, name: 'כניסת שבת', time: '19:30', active: true },
@@ -56,15 +56,9 @@ export default function App() {
       const reader = new FileReader();
       reader.onload = (event) => {
         setCustomLogo(event.target.result);
-        setLogoType('custom');
+        setSelectedMovement('custom');
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const triggerCustomUpload = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
     }
   };
 
@@ -81,80 +75,21 @@ export default function App() {
     setSchedule(schedule.filter((item) => item.id !== id));
   };
 
-  const renderLogoSelector = (type, label, bg, color, content) => {
-    const isSelected = logoType === type;
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75px' }}>
-        <button
-          onClick={() => type === 'custom' ? triggerCustomUpload() : setLogoType(type === logoType ? 'none' : type)}
-          style={{
-            width: '65px',
-            height: '65px',
-            borderRadius: '12px',
-            backgroundColor: bg,
-            color: color,
-            border: isSelected ? '3px solid #2563eb' : '1px solid #d1d5db',
-            boxShadow: isSelected ? '0 0 0 2px rgba(37,99,235,0.3)' : 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '4px',
-            transition: 'all 0.2s ease',
-            boxSizing: 'border-box'
-          }}
-        >
-          {content}
-        </button>
-        <span style={{ fontSize: '12px', marginTop: '6px', fontWeight: isSelected ? 'bold' : 'normal', color: '#374151', textAlign: 'center', whiteSpace: 'nowrap' }}>
-          {label}
-        </span>
-      </div>
-    );
-  };
+  const movements = [
+    { id: 'ba', name: 'בני עקיבא', logo: <img src="image_10.png" alt="סמל בני עקיבא" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> },
+    { id: 'ezra', name: 'עזרא', logo: <img src="image_8.png" alt="סמל עזרא" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> },
+    { id: 'ariel', name: 'אריאל', logo: <img src="image_9.png" alt="סמל אריאל" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> },
+    { id: 'custom', name: 'מותאם אישית', logo: customLogo ? <img src={customLogo} alt="סמל מותאם" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> : <span style={{ fontSize: '32px', color: '#6b7280' }}>+</span> }
+  ];
 
-  const renderPosterLogo = () => {
-    if (logoType === 'none') return null;
-
-    let logoContent = null;
-
-    if (logoType === 'ba') {
-      logoContent = (
-        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-          <circle cx="50" cy="50" r="46" fill="#1e3a8a" stroke="#d97706" strokeWidth="3" />
-          <path d="M30,35 Q50,20 70,35 Q80,55 70,75 Q50,85 30,75 Q20,55 30,35 Z" fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="3,3" />
-          <text x="50" y="58" textAnchor="middle" fill="#ffffff" fontSize="24" fontWeight="bold" fontFamily="Georgia, serif">ב"ע</text>
-        </svg>
-      );
-    } else if (logoType === 'ezra') {
-      logoContent = (
-        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-          <path d="M50,5 L88,25 L88,65 L50,95 L12,65 L12,25 Z" fill="#065f46" stroke="#ffffff" strokeWidth="3" />
-          <text x="50" y="56" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="bold">עזרא</text>
-        </svg>
-      );
-    } else if (logoType === 'ariel') {
-      logoContent = (
-        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-          <rect x="8" y="8" width="84" height="84" rx="20" fill="#0284c7" stroke="#eab308" strokeWidth="4" />
-          <text x="50" y="56" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="bold">אריאל</text>
-        </svg>
-      );
-    } else if (logoType === 'custom' && customLogo) {
-      logoContent = <img src={customLogo} alt="סמל מותאם" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />;
-    }
-
-    if (!logoContent) return null;
-
-    return (
-      <div style={{ position: 'absolute', top: '35px', left: '35px', width: '80px', height: '80px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-        {logoContent}
-      </div>
-    );
+  const getPosterLogo = () => {
+    const movement = movements.find(m => m.id === selectedMovement);
+    if (!movement || selectedMovement === 'none') return null;
+    return movement.logo;
   };
 
   return (
-    <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
+    <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
       <style>{`
         @media print {
           @page {
@@ -187,116 +122,107 @@ export default function App() {
         }
       `}</style>
 
-      <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-        <div className="no-print" style={{ flex: '1', minWidth: '340px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-          <h2>הגדרות לוח מודעות</h2>
-          
-          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>צבע רקע:</label>
-          <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} style={{ marginBottom: '15px', width: '60px', height: '35px', cursor: 'pointer' }} />
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px', marginBottom: '10px' }}>סמל התנועה:</label>
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-            {renderLogoSelector('ba', 'בני עקיבא', '#1e3a8a', '#ffffff', 
-              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>בַּעַ</span>
-            )}
-            {renderLogoSelector('ezra', 'עזרא', '#065f46', '#ffffff', 
-              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>עזרא</span>
-            )}
-            {renderLogoSelector('ariel', 'אריאל', '#0284c7', '#ffffff', 
-              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>אריאל</span>
-            )}
-            {renderLogoSelector('custom', 'מותאם אישית', '#f3f4f6', '#374151', 
-              customLogo ? (
-                <img src={customLogo} alt="תצוגה מקדימה" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }} />
-              ) : (
-                <span style={{ fontSize: '24px', fontWeight: 'bold' }}>+</span>
-              )
-            )}
+      <div ref={posterRef} className="print-container" style={{ width: '550px', height: '778px', padding: '55px 50px', borderRadius: '16px', backgroundColor: bgColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)' }}>
+        {selectedMovement !== 'none' && (
+          <div style={{ position: 'absolute', top: '35px', left: '35px', width: '80px', height: '80px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+            {getPosterLogo()}
           </div>
+        )}
+        
+        <h1 style={{ fontSize: '54px', marginTop: '50px', marginBottom: '8px', fontWeight: 'bold', color: '#111827', letterSpacing: '1px' }}>שבת שלום</h1>
+        <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: '25px', marginBottom: '25px', fontWeight: 'bold', color: '#1f2937' }}>{parasha}</h2>
+        
+        <div style={{ width: '100%', marginTop: '25px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {schedule.filter((item) => item.active).map((item) => (
+            <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '4px' }}>
+              <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#111827' }}>{item.name}</span>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827' }}>{item.time}</span>
+            </div>
+          ))}
+        </div>
+        
+        <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid rgba(0,0,0,0.15)', width: '100%', textAlign: 'center', paddingTop: '16px', fontSize: '20px', color: '#111827' }}>
+          {footerText}
+        </div>
+      </div>
 
-          <input 
-            type="file" 
-            ref={fileInputRef}
-            accept="image/*" 
-            onChange={handleFile} 
-            style={{ display: 'none' }} 
-          />
+      <div className="no-print" style={{ flex: '1', minWidth: '340px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+        <h2>הגדרות לוח מודעות</h2>
+        
+        <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>צבע רקע:</label>
+        <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} style={{ marginBottom: '20px', width: '60px', height: '35px', cursor: 'pointer' }} />
 
-          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>שם הפרשה:</label>
-          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} />
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>כיתוב תחתון:</label>
-          <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '20px', boxSizing: 'border-box' }} />
-
-          <h3 style={{ fontWeight: 'bold', marginTop: '15px', marginBottom: '8px' }}>זמני השבת:</h3>
-          <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '5px' }}>
-            {schedule.map((item) => (
-              <div key={item.id} style={{ display: 'flex', gap: '8px', marginBottom: '8px', padding: '8px', backgroundColor: '#f9fafb', alignItems: 'center', borderRadius: '4px' }}>
-                <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} title="הצג או הסתר בפוסטר" />
-                <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: '1', padding: '6px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
-                <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
-                <button onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }} title="מחק זמן">
-                  <span role="img" aria-label="מחיקה">🗑️</span>
-                </button>
-              </div>
-            ))}
-          </div>
-          
-          <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '6px', marginBottom: '12px', lineHeight: '1.4' }}>
-            <span role="img" aria-label="נורה">💡</span> <strong>טיפ:</strong> ניתן לערוך ולשנות את הטקסט של השם והשעה של כל זמן ישירות בתיבות למעלה.
-          </p>
-          
-          <button onClick={addItem} style={{ width: '100%', padding: '10px', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ הוסף זמן חדש</button>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '25px' }}>
-            <button onClick={handleDownload} style={{ padding: '14px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
-              <span role="img" aria-label="חץ למטה">⬇️</span> הורדה כתמונה
-            </button>
-            <button onClick={handleShare} style={{ padding: '14px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
-              <span role="img" aria-label="חץ יוצא">📤</span> שיתוף
-            </button>
-            <button onClick={() => window.print()} style={{ padding: '14px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
-              <span role="img" aria-label="מדפסת">🖨️</span> הדפסה
-            </button>
-          </div>
+        <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px', marginBottom: '10px' }}>סמל התנועה:</label>
+        <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+          {movements.map(movement => (
+            <div key={movement.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75px' }}>
+              <button 
+                onClick={() => {
+                  if (movement.id === 'custom' && !customLogo) {
+                    fileInputRef.current.click();
+                  } else {
+                    setSelectedMovement(movement.id);
+                  }
+                }}
+                style={{
+                  width: '65px',
+                  height: '65px',
+                  borderRadius: '12px',
+                  border: selectedMovement === movement.id ? '3px solid #2563eb' : '1px solid #d1d5db',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                  cursor: 'pointer',
+                  backgroundColor: movement.id === 'custom' && !customLogo ? '#f3f4f6' : 'white'
+                }}
+              >
+                {movement.logo}
+              </button>
+              <span style={{ fontSize: '12px', marginTop: '6px', fontWeight: selectedMovement === movement.id ? 'bold' : 'normal', color: '#374151', textAlign: 'center' }}>
+                {movement.name}
+              </span>
+            </div>
+          ))}
+          <input type="file" ref={fileInputRef} accept="image/*" onChange={handleFile} style={{ display: 'none' }} />
         </div>
 
-        <div style={{ flex: '1.5', display: 'flex', justifyContent: 'center' }}>
-          <div 
-            ref={posterRef} 
-            className="print-container" 
-            style={{ 
-              width: '550px', 
-              height: '778px', 
-              padding: '55px 50px', 
-              borderRadius: '16px', 
-              backgroundColor: bgColor, 
-              position: 'relative', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              boxSizing: 'border-box',
-              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)'
-            }}
-          >
-            {renderPosterLogo()}
-            
-            <h1 style={{ fontSize: '54px', marginTop: '50px', marginBottom: '8px', fontWeight: 'bold', color: '#111827', letterSpacing: '1px' }}>שבת שלום</h1>
-            <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: '25px', marginBottom: '25px', fontWeight: 'bold', color: '#1f2937' }}>{parasha}</h2>
-            
-            <div style={{ width: '100%', marginTop: '25px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {schedule.filter((item) => item.active).map((item) => (
-                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '4px' }}>
-                  <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#111827' }}>{item.name}</span>
-                  <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827' }}>{item.time}</span>
-                </div>
-              ))}
+        <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>העלאת סמל:</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+          <button style={{ padding: '8px 12px', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', color: '#111827' }}>Choose File</button>
+          <span style={{ fontSize: '13px', color: '#6b7280' }}>No file chosen</span>
+        </div>
+
+        <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>שם הפרשה:</label>
+        <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} />
+        <input type="text" placeholder="פרשת השבוע" style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} />
+
+        <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>כיתוב תחתון:</label>
+        <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '20px', boxSizing: 'border-box' }} />
+
+        <h3 style={{ fontWeight: 'bold', marginTop: '15px', marginBottom: '8px' }}>זמני השבת:</h3>
+        <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '5px' }}>
+          {schedule.map((item) => (
+            <div key={item.id} style={{ display: 'flex', gap: '8px', marginBottom: '8px', padding: '8px', backgroundColor: '#f9fafb', alignItems: 'center', borderRadius: '4px' }}>
+              <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', padding: '2px', borderRadius: '4px', border: '1px solid #d1d5db' }}>
+                <span style={{ fontSize: '13px' }}>{item.time}</span>
+                <span role="img" aria-label="שעון" style={{ fontSize: '14px' }}>🕒</span>
+              </div>
+              <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: '1', padding: '6px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
+              <button onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }} title="מחק זמן">
+                <span role="img" aria-label="מחיקה">🗑️</span>
+              </button>
             </div>
-            
-            <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid rgba(0,0,0,0.15)', width: '100%', textAlign: 'center', paddingTop: '16px', fontSize: '20px', color: '#111827' }}>
-              {footerText}
-            </div>
-          </div>
+          ))}
+        </div>
+        
+        <button onClick={addItem} style={{ width: '100%', padding: '10px', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>+ הוסף זמן חדש</button>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '25px' }}>
+          <button onClick={handleDownload} style={{ padding: '14px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>⬇️ הורדה כתמונה</button>
+          <button onClick={handleShare} style={{ padding: '14px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>📤 שיתוף</button>
+          <button onClick={() => window.print()} style={{ padding: '14px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>🖨️ הדפסה</button>
         </div>
       </div>
     </div>
