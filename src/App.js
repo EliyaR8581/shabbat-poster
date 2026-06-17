@@ -145,7 +145,7 @@ export default function App() {
           <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '10px' }}>סמל התנועה:</label>
           <div style={{ display: 'flex', gap: '12px', marginBottom: '25px' }}>
             {[
-              { id: 'ba', name: 'בני-עקיבא', src: '/ba.jpg' },
+              { id: 'ba', name: 'בני-עקיבא', src: '/ba.png' },
               { id: 'ezra', name: 'עזרא', src: '/ezra.png' },
               { id: 'ariel', name: 'אריאל', src: '/ariel.webp' }
             ].map((m) => (
