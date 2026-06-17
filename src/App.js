@@ -124,18 +124,77 @@ export default function App() {
           <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '5px' }}>
             {schedule.map((item) => (
               <div key={item.id} style={{ display: 'flex', gap: '8px', marginBottom: '8px', padding: '8px', backgroundColor: '#f9fafb', alignItems: 'center', borderRadius: '4px' }}>
-                <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} title="הצג/הסתר בפוסטר" />
+                <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} title="הצג או הסתר בפוסטר" />
                 <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: '1', padding: '6px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
                 <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
-                <button onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }} title="מחק זמן">🗑️</button>
+                <button onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }} title="מחק זמן">
+                  <span role="img" aria-label="מחיקה">🗑️</span>
+                </button>
               </div>
             ))}
           </div>
           
           <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '6px', marginBottom: '12px', lineHeight: '1.4' }}>
-            💡 <strong>טיפ:</strong> ניתן לערוך ולשנות את הטקסט של השם והשעה של כל זמן ישירות בתיבות למעלה.
+            <span role="img" aria-label="נורה">💡</span> <strong>טיפ:</strong> ניתן לערוך ולשנות את הטקסט של השם והשעה של כל זמן ישירות בתיבות למעלה.
           </p>
           
           <button onClick={addItem} style={{ width: '100%', padding: '10px', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ הוסף זמן חדש</button>
 
-          <div style={{ display: 'flex
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '25px' }}>
+            <button onClick={handleDownload} style={{ padding: '14px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
+              <span role="img" aria-label="חץ למטה">⬇️</span> הורדה כתמונה
+            </button>
+            <button onClick={handleShare} style={{ padding: '14px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
+              <span role="img" aria-label="חץ יוצא">📤</span> שיתוף
+            </button>
+            <button onClick={() => window.print()} style={{ padding: '14px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none' }}>
+              <span role="img" aria-label="מדפסת">🖨️</span> הדפסה
+            </button>
+          </div>
+        </div>
+
+        <div style={{ flex: '1.5', display: 'flex', justifyContent: 'center' }}>
+          <div 
+            ref={posterRef} 
+            className="print-container" 
+            style={{ 
+              width: '550px', 
+              height: '778px', 
+              padding: '55px 50px', 
+              borderRadius: '16px', 
+              backgroundColor: bgColor, 
+              position: 'relative', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center',
+              boxSizing: 'border-box',
+              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)'
+            }}
+          >
+            {customLogo && (
+              <div style={{ position: 'absolute', top: '35px', left: '35px', width: '80px', height: '80px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+                <img src={customLogo} alt="סמל מוסד" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
+              </div>
+            )}
+            
+            <h1 style={{ fontSize: '54px', marginTop: '50px', marginBottom: '8px', fontWeight: 'bold', color: '#111827', letterSpacing: '1px' }}>שבת שלום</h1>
+            <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: '25px', marginBottom: '25px', fontWeight: 'bold', color: '#1f2937' }}>{parasha}</h2>
+            
+            <div style={{ width: '100%', marginTop: '25px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {schedule.filter((item) => item.active).map((item) => (
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '4px' }}>
+                  <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#111827' }}>{item.name}</span>
+                  <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827' }}>{item.time}</span>
+                </div>
+              ))}
+            </div>
+            
+            <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid rgba(0,0,0,0.15)', width: '100%', textAlign: 'center', paddingTop: '16px', fontSize: '20px', color: '#111827' }}>
+              {footerText}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
