@@ -121,7 +121,9 @@ export default function App() {
       </div>
     );
   };
-
+//here
+  console.log("Selected Movement:", selectedMovement);
+  console.log("Image Source Value:", LOGOS[selectedMovement]);
   return (
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh', boxSizing: 'border-box' }}>
       <style>{`
