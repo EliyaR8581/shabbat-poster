@@ -20,6 +20,7 @@ export default function App() {
 
   const handleDownload = async () => {
     if (posterRef.current) {
+      // scale: 2 מבטיח איכות גבוהה יותר בתמונה
       const canvas = await html2canvas(posterRef.current, { scale: 2 });
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
@@ -70,19 +71,9 @@ export default function App() {
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
       <style>{`
         @media print {
-          @page { size: A4 portrait; margin: 0; }
           body * { visibility: hidden; }
           .print-container, .print-container * { visibility: visible; }
-          .print-container { 
-            position: absolute; 
-            left: 0; 
-            top: 0; 
-            width: 210mm !important; 
-            height: 297mm !important; 
-            margin: 0 !important;
-            padding: 40px !important;
-            box-sizing: border-box;
-          }
+          .print-container { position: absolute; left: 0; top: 0; width: 100%; }
         }
       `}</style>
 
@@ -118,10 +109,11 @@ export default function App() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
             <button onClick={handleDownload} style={{ padding: '12px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>⬇️ הורדה כתמונה</button>
             <button onClick={handleShare} style={{ padding: '12px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>📤 שיתוף</button>
-            <button onClick={() => window.print()} style={{ padding: '12px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>🖨️ הדפסה (A4)</button>
+            <button onClick={() => window.print()} style={{ padding: '12px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>🖨️ הדפסה</button>
           </div>
         </div>
 
+        {/* ה-posterRef כאן שומר על יחס A4 בעזרת aspectRatio */}
         <div style={{ flex: '1.2', minWidth: '350px', display: 'flex', justifyContent: 'center' }}>
           <div ref={posterRef} className="print-container" style={{ width: '100%', maxWidth: '430px', aspectRatio: '1/1.414', padding: '30px', borderRadius: '12px', backgroundColor: bgColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {customLogo && (
