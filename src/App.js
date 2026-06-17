@@ -66,7 +66,6 @@ export default function App() {
     setSchedule([...schedule, newItem]);
   };
 
-  // פונקציה חדשה למחיקת זמן מהרשימה
   const deleteItem = (id) => {
     setSchedule(schedule.filter((item) => item.id !== id));
   };
@@ -106,7 +105,6 @@ export default function App() {
       `}</style>
 
       <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-        {/* טור הגדרות */}
         <div className="no-print" style={{ flex: '1', minWidth: '340px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
           <h2>הגדרות לוח מודעות</h2>
           
@@ -129,10 +127,15 @@ export default function App() {
                 <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} title="הצג/הסתר בפוסטר" />
                 <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: '1', padding: '6px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
                 <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #d1d5db' }} />
-                {/* כפתור מחיקה */}
                 <button onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }} title="מחק זמן">🗑️</button>
               </div>
             ))}
           </div>
           
-          {/* כיתוב הסבר קטן
+          <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '6px', marginBottom: '12px', lineHeight: '1.4' }}>
+            💡 <strong>טיפ:</strong> ניתן לערוך ולשנות את הטקסט של השם והשעה של כל זמן ישירות בתיבות למעלה.
+          </p>
+          
+          <button onClick={addItem} style={{ width: '100%', padding: '10px', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ הוסף זמן חדש</button>
+
+          <div style={{ display: 'flex
