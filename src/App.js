@@ -3,9 +3,11 @@ import html2canvas from 'html2canvas';
 
 export default function App() {
   const posterRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [bgColor, setBgColor] = useState('#f2f9f1');
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
+  const [logoType, setLogoType] = useState('none'); 
   const [customLogo, setCustomLogo] = useState('');
   const [schedule, setSchedule] = useState([
     { id: 1, name: 'כניסת שבת', time: '19:30', active: true },
@@ -52,8 +54,17 @@ export default function App() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => setCustomLogo(event.target.result);
+      reader.onload = (event) => {
+        setCustomLogo(event.target.result);
+        setLogoType('custom');
+      };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerCustomUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -68,6 +79,78 @@ export default function App() {
 
   const deleteItem = (id) => {
     setSchedule(schedule.filter((item) => item.id !== id));
+  };
+
+  const renderLogoSelector = (type, label, bg, color, content) => {
+    const isSelected = logoType === type;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75px' }}>
+        <button
+          onClick={() => type === 'custom' ? triggerCustomUpload() : setLogoType(type === logoType ? 'none' : type)}
+          style={{
+            width: '65px',
+            height: '65px',
+            borderRadius: '12px',
+            backgroundColor: bg,
+            color: color,
+            border: isSelected ? '3px solid #2563eb' : '1px solid #d1d5db',
+            boxShadow: isSelected ? '0 0 0 2px rgba(37,99,235,0.3)' : 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '4px',
+            transition: 'all 0.2s ease',
+            boxSizing: 'border-box'
+          }}
+        >
+          {content}
+        </button>
+        <span style={{ fontSize: '12px', marginTop: '6px', fontWeight: isSelected ? 'bold' : 'normal', color: '#374151', textAlign: 'center', whiteSpace: 'nowrap' }}>
+          {label}
+        </span>
+      </div>
+    );
+  };
+
+  const renderPosterLogo = () => {
+    if (logoType === 'none') return null;
+
+    let logoContent = null;
+
+    if (logoType === 'ba') {
+      logoContent = (
+        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+          <circle cx="50" cy="50" r="46" fill="#1e3a8a" stroke="#d97706" strokeWidth="3" />
+          <path d="M30,35 Q50,20 70,35 Q80,55 70,75 Q50,85 30,75 Q20,55 30,35 Z" fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="3,3" />
+          <text x="50" y="58" textAnchor="middle" fill="#ffffff" fontSize="24" fontWeight="bold" fontFamily="Georgia, serif">ב"ע</text>
+        </svg>
+      );
+    } else if (logoType === 'ezra') {
+      logoContent = (
+        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+          <path d="M50,5 L88,25 L88,65 L50,95 L12,65 L12,25 Z" fill="#065f46" stroke="#ffffff" strokeWidth="3" />
+          <text x="50" y="56" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="bold">עזרא</text>
+        </svg>
+      );
+    } else if (logoType === 'ariel') {
+      logoContent = (
+        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+          <rect x="8" y="8" width="84" height="84" rx="20" fill="#0284c7" stroke="#eab308" strokeWidth="4" />
+          <text x="50" y="56" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="bold">אריאל</text>
+        </svg>
+      );
+    } else if (logoType === 'custom' && customLogo) {
+      logoContent = <img src={customLogo} alt="סמל מותאם" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />;
+    }
+
+    if (!logoContent) return null;
+
+    return (
+      <div style={{ position: 'absolute', top: '35px', left: '35px', width: '80px', height: '80px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+        {logoContent}
+      </div>
+    );
   };
 
   return (
@@ -109,10 +192,35 @@ export default function App() {
           <h2>הגדרות לוח מודעות</h2>
           
           <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>צבע רקע:</label>
-          <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} style={{ marginBottom: '20px', width: '60px', height: '35px', cursor: 'pointer' }} />
+          <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} style={{ marginBottom: '15px', width: '60px', height: '35px', cursor: 'pointer' }} />
 
-          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>העלאת סמל:</label>
-          <input type="file" accept="image/*" onChange={handleFile} style={{ marginBottom: '20px', display: 'block' }} />
+          <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px', marginBottom: '10px' }}>סמל התנועה:</label>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            {renderLogoSelector('ba', 'בני עקיבא', '#1e3a8a', '#ffffff', 
+              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>בַּעַ</span>
+            )}
+            {renderLogoSelector('ezra', 'עזרא', '#065f46', '#ffffff', 
+              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>עזרא</span>
+            )}
+            {renderLogoSelector('ariel', 'אריאל', '#0284c7', '#ffffff', 
+              <span style={{ fontWeight: 'bold', fontSize: '15px' }}>אריאל</span>
+            )}
+            {renderLogoSelector('custom', 'מותאם אישית', '#f3f4f6', '#374151', 
+              customLogo ? (
+                <img src={customLogo} alt="תצוגה מקדימה" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px' }} />
+              ) : (
+                <span style={{ fontSize: '24px', fontWeight: 'bold' }}>+</span>
+              )
+            )}
+          </div>
+
+          <input 
+            type="file" 
+            ref={fileInputRef}
+            accept="image/*" 
+            onChange={handleFile} 
+            style={{ display: 'none' }} 
+          />
 
           <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>שם הפרשה:</label>
           <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} />
@@ -171,11 +279,7 @@ export default function App() {
               boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)'
             }}
           >
-            {customLogo && (
-              <div style={{ position: 'absolute', top: '35px', left: '35px', width: '80px', height: '80px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-                <img src={customLogo} alt="סמל מוסד" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
-              </div>
-            )}
+            {renderPosterLogo()}
             
             <h1 style={{ fontSize: '54px', marginTop: '50px', marginBottom: '8px', fontWeight: 'bold', color: '#111827', letterSpacing: '1px' }}>שבת שלום</h1>
             <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: '25px', marginBottom: '25px', fontWeight: 'bold', color: '#1f2937' }}>{parasha}</h2>
