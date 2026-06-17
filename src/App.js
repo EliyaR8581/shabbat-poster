@@ -20,7 +20,6 @@ export default function App() {
 
   const handleDownload = async () => {
     if (posterRef.current) {
-      // scale: 2 מבטיח איכות גבוהה יותר בתמונה
       const canvas = await html2canvas(posterRef.current, { scale: 2 });
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
@@ -113,9 +112,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* ה-posterRef כאן שומר על יחס A4 בעזרת aspectRatio */}
+        {/* כאן הפרופורציה המדויקת ל-A4 */}
         <div style={{ flex: '1.2', minWidth: '350px', display: 'flex', justifyContent: 'center' }}>
-          <div ref={posterRef} className="print-container" style={{ width: '100%', maxWidth: '430px', aspectRatio: '1/1.414', padding: '30px', borderRadius: '12px', backgroundColor: bgColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div ref={posterRef} className="print-container" style={{ width: '100%', maxWidth: '430px', aspectRatio: '210/297', padding: '30px', borderRadius: '12px', backgroundColor: bgColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {customLogo && (
               <div style={{ position: 'absolute', top: '20px', left: '20px', width: '70px', height: '70px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px' }}>
                 <img src={customLogo} alt="logo" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
