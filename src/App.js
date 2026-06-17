@@ -80,55 +80,17 @@ export default function App() {
       fontFamily: 'sans-serif' 
     }}>
       
-      {/* חוקי עיצוב קשוחים להדפסה בעמוד אחד בלבד */}
       <style>{`
         @media print {
-          @page {
-            size: A4 portrait;
-            margin: 0 !important;
-          }
-          html, body {
-            height: 100vh !important;
-            overflow: hidden !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-          .no-print {
-            display: none !important;
-          }
-          .print-container {
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
-            height: 100vh !important;
-          }
-          .poster-to-print {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            padding: 50px !important;
-            box-sizing: border-box !important;
-            overflow: hidden !important;
-            page-break-inside: avoid !important;
-            page-break-after: avoid !important;
-          }
+          @page { size: A4 portrait; margin: 0 !important; }
+          html, body { height: 100vh !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .no-print { display: none !important; }
+          .print-container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; height: 100vh !important; }
+          .poster-to-print { width: 100vw !important; height: 100vh !important; max-height: 100vh !important; box-shadow: none !important; border-radius: 0 !important; padding: 50px !important; box-sizing: border-box !important; overflow: hidden !important; page-break-inside: avoid !important; }
         }
       `}</style>
       
-      <div className="print-container" style={{ 
-        display: 'flex', 
-        flexDirection: 'row', 
-        gap: '30px', 
-        alignItems: 'flex-start', 
-        justifyContent: 'center',
-        width: '100%',
-        maxWidth: '1050px'
-      }}>
+      <div className="print-container" style={{ display: 'flex', flexDirection: 'row', gap: '30px', alignItems: 'flex-start', justifyContent: 'center', width: '100%', maxWidth: '1050px' }}>
         
         {/* צד ימין: פאנל הגדרות */}
         <div className="no-print" style={{ width: '400px', flexShrink: 0, backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
@@ -157,19 +119,25 @@ export default function App() {
           </div>
 
           <label style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>פרשת השבוע:</label>
-          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box' }} placeholder="שם הפרשה" />
+          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box' }} />
           
           <label style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>כיתוב תחתון:</label>
-          <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box' }} placeholder="כיתוב תחתון" />
+          <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box' }} />
 
-          <label style={{ fontWeight: 'bold', marginBottom: '10px', display: 'block' }}>לוח זמנים:</label>
+          <label style={{ fontWeight: 'bold', marginBottom: '2px', display: 'block' }}>לוח זמנים:</label>
+          <span style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>ניתן לערוך את שמות הזמנים והשעות ישירות ברשימה</span>
+          
           <div style={{ marginBottom: '20px' }}>
             {schedule.map(item => (
-              <div key={item.id} style={{ display: 'flex', gap: '5px', marginBottom: '5px' }}>
-                {/* סימון ה-V הוסר מכאן לחלוטין */}
+              <div key={item.id} style={{ display: 'flex', gap: '5px', marginBottom: '5px', alignItems: 'center' }}>
                 <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ width: '80px' }} />
                 <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: 1 }} />
-                <button onClick={() => deleteItem(item.id)} style={{ border: 'none', cursor: 'pointer', background: 'transparent' }}>🗑️</button>
+                <button onClick={() => deleteItem(item.id)} style={{ border: 'none', cursor: 'pointer', background: 'transparent', padding: '2px', display: 'flex', alignItems: 'center' }}>
+                  {/* אייקון פח אשפה עם מכסה */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
+                  </svg>
+                </button>
               </div>
             ))}
             <button onClick={addItem} style={{ width: '100%', marginTop: '5px', padding: '8px', cursor: 'pointer', backgroundColor: '#e5e7eb', border: 'none', borderRadius: '5px' }}>+ הוסף זמן</button>
@@ -186,11 +154,16 @@ export default function App() {
 
         {/* צד שמאל: פוסטר */}
         <div ref={posterRef} className="poster-to-print" style={{ width: '550px', flexShrink: 0, height: '778px', padding: '50px', borderRadius: '16px', backgroundColor: bgColor, color: textColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }}>
-          <div style={{ position: 'absolute', top: '35px', left: '35px', width: '85px', height: '85px', backgroundColor: 'white', borderRadius: '50%', padding: '6px', overflow: 'hidden' }}>
+          
+          {/* לוגו עם רקע שקוף למחצה */}
+          <div style={{ position: 'absolute', top: '35px', left: '35px', width: '85px', height: '85px', backgroundColor: 'rgba(255, 255, 255, 0.4)', borderRadius: '50%', padding: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img src={selectedMovement === 'custom' ? customLogo : LOGOS[selectedMovement]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
+
           <h1 style={{ fontSize: '54px', marginTop: '50px', fontWeight: 'bold' }}>שבת שלום</h1>
-          <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '25px', fontWeight: 'bold' }}>{parasha}</h2>
+          
+          {/* רקע הפרשה - תואם לסמל */}
+          <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255, 255, 255, 0.4)', borderRadius: '25px', fontWeight: 'bold' }}>{parasha}</h2>
           
           <div style={{ width: '100%', marginTop: '20px' }}>
             {schedule.map(i => (
