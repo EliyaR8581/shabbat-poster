@@ -76,7 +76,8 @@ export default function App() {
         }
       `}</style>
 
-      <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+        {/* טור הגדרות */}
         <div style={{ flex: '1', minWidth: '300px', backgroundColor: 'white', padding: '20px', borderRadius: '12px' }}>
           <h2>הגדרות לוח מודעות</h2>
           
@@ -112,25 +113,43 @@ export default function App() {
           </div>
         </div>
 
-        {/* כאן הפרופורציה המדויקת ל-A4 */}
+        {/* טור תצוגה מקדימה - נעול על מידות A4 מדויקות בפיקסלים */}
         <div style={{ flex: '1.2', minWidth: '350px', display: 'flex', justifyContent: 'center' }}>
-          <div ref={posterRef} className="print-container" style={{ width: '100%', maxWidth: '430px', aspectRatio: '210/297', padding: '30px', borderRadius: '12px', backgroundColor: bgColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div 
+            ref={posterRef} 
+            className="print-container" 
+            style={{ 
+              width: '420px', 
+              height: '594px', 
+              padding: '40px 35px', 
+              borderRadius: '12px', 
+              backgroundColor: bgColor, 
+              position: 'relative', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center',
+              boxSizing: 'border-box'
+            }}
+          >
             {customLogo && (
-              <div style={{ position: 'absolute', top: '20px', left: '20px', width: '70px', height: '70px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px' }}>
+              <div style={{ position: 'absolute', top: '25px', left: '25px', width: '60px', height: '60px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                 <img src={customLogo} alt="logo" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
               </div>
             )}
-            <h1 style={{ fontSize: '46px', marginTop: '60px', marginBottom: '5px' }}>שבת שלום</h1>
-            <h2 style={{ fontSize: '19px', padding: '5px 22px', backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: '20px' }}>{parasha}</h2>
-            <div style={{ width: '100%', marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            
+            <h1 style={{ fontSize: '40px', marginTop: '40px', marginBottom: '5px', fontWeight: 'bold' }}>שבת שלום</h1>
+            <h2 style={{ fontSize: '18px', padding: '5px 20px', backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: '20px', marginBottom: '10px' }}>{parasha}</h2>
+            
+            <div style={{ width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {schedule.filter((item) => item.active).map((item) => (
-                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.1)', paddingBottom: '4px' }}>
-                  <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{item.name}</span>
-                  <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{item.time}</span>
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.1)', paddingBottom: '2px' }}>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold' }}>{item.name}</span>
+                  <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{item.time}</span>
                 </div>
               ))}
             </div>
-            <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid rgba(0,0,0,0.1)', width: '90%', textAlign: 'center', paddingTop: '12px' }}>
+            
+            <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid rgba(0,0,0,0.1)', width: '100%', textAlign: 'center', paddingTop: '12px', fontSize: '16px' }}>
               {footerText}
             </div>
           </div>
