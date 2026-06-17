@@ -71,11 +71,11 @@ export default function App() {
 
   return (
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
-      {/* Container - ב-RTL, הילד הראשון יהיה מימין */}
-      <div style={{ display: 'flex', gap: '40px', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap', maxWidth: '1100px', margin: '0 auto' }}>
+      {/* כאן ה-flexDirection row ו-alignItems flex-start מבטיחים שהם יישארו בשורה */}
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '40px', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap', maxWidth: '1100px', margin: '0 auto' }}>
         
-        {/* צד ימין: פאנל הגדרות */}
-        <div style={{ width: '400px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+        {/* צד ימין: פאנל הגדרות (יופיע ראשון ב-RTL) */}
+        <div style={{ width: '400px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', flexShrink: 0 }}>
           <h2 style={{ marginTop: 0 }}>הגדרת לו"ז שבת</h2>
 
           <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
@@ -115,18 +115,18 @@ export default function App() {
             <button onClick={addItem} style={{ width: '100%', marginTop: '5px' }}>+ הוסף זמן</button>
           </div>
 
-          {/* אזור הכפתורים החדש */}
+          {/* מבנה כפתורים חדש */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button onClick={handleShare} style={{ width: '100%', padding: '12px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>📤 שתף</button>
+            <button onClick={handleShare} style={{ width: '100%', padding: '12px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>📤 שתף</button>
             <div style={{ display: 'flex', gap: '10px' }}>
-                <button onClick={handleDownload} style={{ flex: 1, padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>⬇️ הורדה</button>
-                <button onClick={() => window.print()} style={{ flex: 1, padding: '12px', background: '#374151', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>🖨️ הדפסה</button>
+                <button onClick={handleDownload} style={{ flex: 1, padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>⬇️ הורדה</button>
+                <button onClick={() => window.print()} style={{ flex: 1, padding: '12px', background: '#374151', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>🖨️ הדפסה</button>
             </div>
           </div>
         </div>
 
         {/* צד שמאל: פוסטר */}
-        <div ref={posterRef} style={{ width: '550px', height: '778px', padding: '50px', borderRadius: '16px', backgroundColor: bgColor, color: textColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }}>
+        <div ref={posterRef} style={{ width: '550px', height: '778px', padding: '50px', borderRadius: '16px', backgroundColor: bgColor, color: textColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 10px 15px rgba(0,0,0,0.1)', flexShrink: 0 }}>
           <div style={{ position: 'absolute', top: '35px', left: '35px', width: '85px', height: '85px', backgroundColor: 'white', borderRadius: '50%', padding: '6px', overflow: 'hidden' }}>
             <img src={selectedMovement === 'custom' ? customLogo : LOGOS[selectedMovement]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
