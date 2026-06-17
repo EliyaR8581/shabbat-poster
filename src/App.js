@@ -125,7 +125,7 @@ export default function App() {
           <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box' }} />
 
           <label style={{ fontWeight: 'bold', marginBottom: '2px', display: 'block' }}>לוח זמנים:</label>
-          <span style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>ניתן לערוך את שמות הזמנים והשעות ישירות ברשימה</span>
+          <span style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>ניתן לערוך את שמות הזמנים והשעות</span>
           
           <div style={{ marginBottom: '20px' }}>
             {schedule.map(item => (
@@ -133,8 +133,8 @@ export default function App() {
                 <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ width: '80px' }} />
                 <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: 1 }} />
                 <button onClick={() => deleteItem(item.id)} style={{ border: 'none', cursor: 'pointer', background: 'transparent', padding: '2px', display: 'flex', alignItems: 'center' }}>
-                  {/* אייקון פח אשפה עם מכסה */}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {/* סמל פח אשפה בצבע כסף מעודן */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
                   </svg>
                 </button>
@@ -155,14 +155,12 @@ export default function App() {
         {/* צד שמאל: פוסטר */}
         <div ref={posterRef} className="poster-to-print" style={{ width: '550px', flexShrink: 0, height: '778px', padding: '50px', borderRadius: '16px', backgroundColor: bgColor, color: textColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }}>
           
-          {/* לוגו עם רקע שקוף למחצה */}
           <div style={{ position: 'absolute', top: '35px', left: '35px', width: '85px', height: '85px', backgroundColor: 'rgba(255, 255, 255, 0.4)', borderRadius: '50%', padding: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img src={selectedMovement === 'custom' ? customLogo : LOGOS[selectedMovement]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
 
           <h1 style={{ fontSize: '54px', marginTop: '50px', fontWeight: 'bold' }}>שבת שלום</h1>
           
-          {/* רקע הפרשה - תואם לסמל */}
           <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255, 255, 255, 0.4)', borderRadius: '25px', fontWeight: 'bold' }}>{parasha}</h2>
           
           <div style={{ width: '100%', marginTop: '20px' }}>
