@@ -72,7 +72,6 @@ export default function App() {
   return (
     <div style={{ direction: 'rtl', padding: '20px', backgroundColor: '#f3f4f6', minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
       
-      {/* Container - מוגדר כ-Flex ונותן להם מקום */}
       <div style={{ 
         display: 'flex', 
         flexDirection: 'row', 
@@ -80,7 +79,7 @@ export default function App() {
         alignItems: 'flex-start', 
         justifyContent: 'center',
         width: '100%',
-        maxWidth: '1050px' // רוחב קבוע כדי לאפשר להם לעמוד זה לצד זה
+        maxWidth: '1050px'
       }}>
         
         {/* צד ימין: פאנל הגדרות */}
@@ -109,10 +108,14 @@ export default function App() {
             <input type="file" ref={fileInputRef} onChange={handleFile} style={{ display: 'none' }} />
           </div>
 
-          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box' }} placeholder="שם הפרשה" />
+          <label style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>פרשת השבוע:</label>
+          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box' }} placeholder="שם הפרשה" />
+          
+          <label style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>כיתוב תחתון:</label>
           <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box' }} placeholder="כיתוב תחתון" />
 
-          <div style={{ maxHeight: '200px', overflowY: 'auto', marginBottom: '20px' }}>
+          <label style={{ fontWeight: 'bold', marginBottom: '10px', display: 'block' }}>לוח זמנים:</label>
+          <div style={{ marginBottom: '20px' }}>
             {schedule.map(item => (
               <div key={item.id} style={{ display: 'flex', gap: '5px', marginBottom: '5px' }}>
                 <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} />
@@ -121,11 +124,11 @@ export default function App() {
                 <button onClick={() => deleteItem(item.id)} style={{ border: 'none', cursor: 'pointer' }}>🗑️</button>
               </div>
             ))}
-            <button onClick={addItem} style={{ width: '100%', marginTop: '5px' }}>+ הוסף זמן</button>
+            <button onClick={addItem} style={{ width: '100%', marginTop: '5px', padding: '8px', cursor: 'pointer' }}>+ הוסף זמן</button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button onClick={handleShare} style={{ width: '100%', padding: '12px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>📤 שתף</button>
+            <button onClick={handleShare} style={{ width: '100%', padding: '12px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>📤 שיתוף</button>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={handleDownload} style={{ flex: 1, padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>⬇️ הורדה</button>
                 <button onClick={() => window.print()} style={{ flex: 1, padding: '12px', background: '#374151', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>🖨️ הדפסה</button>
