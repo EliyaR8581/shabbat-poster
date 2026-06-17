@@ -1,272 +1,49 @@
 import React, { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 
+// סמלי התנועות המוטמעים ישירות בקוד (למניעת בעיות נתיבים)
+const LOGOS = {
+  ba: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABQaWNhc2EAAP/iAdhJQ0NfUFJPTEZJTEUAAQEAAAdQYXBwbDCEAAAAbW50clJHQiBYWVogB8gABgADAAAAAAAhYWNzcEFQUEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPbWAAEAAAAA0y1hcHBsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARZGVzYwAAAVAAAABid3J0MgAAAWgAAAA0d3RwdAAAAZwAAAAUYmtwdAAAAbAAAAAUclhZWgAAAcQAAAAUZ1hZWgAAAdgAAAAUYlhZWgAAAewAAAAUdHJRQwAAAgAAAAgAZ1RSUQAAAgAAAAgAYlRSUQAAAgAAAAgAZGVzYwAAAAAAAAALRGlzcGxheSBQMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSBJbmMuLCAyMDE3AABYWVogAAAAAAAA81EAAQAAAAEWzFhZWiAAAAAAAACD3wAAPb////+7WFlaIAAAAAAAAF2VAAC3jv///8tYWVogAAAAAAAAJK4AAB2AAAAPHRleHQAAAAAQ29weXJpZ2h0IEFwcGxlIEluYy4sIDIwMTf/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCADbAMwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usld356o9vgY6en89_D_xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgs_QEDEQYAAAECBAQDBwQHBwYFDEF3AQECEQMhIRISEQYxEwUiQVFhEiJxBTKBkRShsUIjwVLR8FBiM3KCwdHhQ3SX8WNTk7KiwvFlJic3OUMkZWhkdWValidXbHhkYGNoaW9zdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usld356o9vgY6en89_D_aAAwDAQACEQMRAD8A_P_wCDPwaPxZvbq3Goiw_s9IiB9n87zNxb_aGMbf1r0_Xv2O7bRvDl7frrj_aLGBpfKa0CpIVBOM7_lBx7_wC7XC_s7fG7UPgx4rWfS1sh_a7wQSvPbecI1DMCRyDkbiencd_m_b3w78F_DvjnR01bUpbCee8X98lupgjjIPIIDc57989_8X96eyHsdwtzwsE8bksRiquu0dJpIpxonlWSuuunXv7R_K3tX2rmMLXjUwdTlhreGmsrLreSfZ2b2Wh_N_8AHL4by_Djx3qGnSz2k7pM58uKbzfKBOQpyAc4P8v9qvaP2D_g3ovx6vG0vVbyy06fShFLFMU2PMCWyN_RscDHY_7W2us_bq_Z38NfCTxjLeWGpebeao8ksVrHCscUOSST3OAfpxXkf7LPxtuvgn8UtPuYI7SePVp4be6e5t_P8hdxIdemCCR06gn3WvwbFZRiOwfa7D5RnnPh4yrKE_ZyUkoTlG8ZfAnG_vWTva_kfVYfHQx2WPEYa0nyXjfs0rp_g_Q_Qj9rbXPhz8AfgzqGlW2qWOpanqWnNFBbi8W8ZpdrDceSUAOfpx_tfN_NPrE_na_dyBfL8y4kbYvReScCv21_bk_Z78PfGrwI_iO2v459Wv7Z7i3mC_AGZAdq_xEnqRnr_wD_FDX6K50DXrm1m_1sUrIenUH_AD_3zX2Hj_7EV_Z3D4RYSrLEYGfNKjPmb0fInF_Am7qSdlqmtbnidks6wOMVd1Y8tSOnLbW_y100er3O78MfDbUfito2gWFp_Y8CW0U8zy3l8tpvLOmVG7rx6D8vvV6Prf8AwTQ8ZfDbwhLqM0unS28cAu_KtL3zmK9MhgMEDPXH9K8Y8FfFGztr3R_tFwLe_tFeCWV7fzvMhyChwCP_14r7n_Zf_bmsvFHhmTwb4lu7S3tbyLykuZLTbE6_3CM8d8e_f_V_wnmXFuZZNhIUsBT9on8cnF88Z_y_AnpGyd76pvRn6VhMuw2LbeJlpa9lo7pa9Xo_Kx87fAD_AIJpeJvjlq7S3NzdWFisXntLNY_LIpGRgkjP-f8Ac_1q-Gf7AXhbxX8T18NnX5dRvI7WSWWWOzEMCshUYYlyeSR_j_D_AHH8E_i14M_Zbvbrwhby6c9gLwW7vFbfPIxOAfv_ADEA5z7_AO7XA6t_UR_Zp+Ffx0v72fRtdtbiO_mW5vLWP_j4Ichn_AN_g_Tav8S13cLcScb5lVlU4ewT9m_huubm7tTlywXld9VfYxxmW5PhUo4_E63vptbrfS-vTX_I0Yv8AgmjBbeF7C1GsfvbCDfHttP3_AEv73-e3_AHzXAfsOfst3V7_wUBsdBGr6_p9tYebcyXdrbiCaLYrBWyX6bsevUfMvytX13D_wXF_ZptbI7R6vYafPqUf2zZpdtbySws0kXWIn5h86feZfk_vV8UeF_-CcHxq8ffEiPwl_wh_iC0uZbxYZbm-tZVs7ZHYAySS4CbAOvzc7ffbX68_sKfA7w18CPhvLpHhfT9Nt_KuRFPdWVstut3JGArNxydrbhyTt9W_ir9F4b4TWDw0cZxDh7xl8MbWcl3el1H_wG-zve_BmmYfWJKll09t3ul5K9m_nbz0PpH4YfsF_Dj4TeLbrxHpWl3R1u_DNc3U8_nGZmG09v4VJVfQb_AL1fEP8AwWq_Yx8LeOvhfqnjZtPvV8QaXFmO7trYymV1Q_K6gfOpULyPu4_vbvL_S_4Z_EHU7e_m0DxDFF9vi_eWtzA_yXMeSMZ9eD_4996vPv8AgobptvrP7PPiyG8_eWx0m7by_vIxELEBh_Fzj_gS_wC9v87F55xHguLcG8JiZU8PzQUaceVUpQb_AIdo3i4v7XMmndb6HrTy7LpZXWpVKalPlcnN_HGXSSfuvba1tLbo_kQ_wCDdf8AYE8PftGfGrxD4w8ZaZp-raD4LtEt7SzvLHzkmvp8nfvPyjYkbjHzcy_eXatfs3rX7A3wqvbG4tT8PfCE9vcr88b6bEyyAj5g_GGVgehryX_giH8GtA-En7B-gtoel6fpr65PLdXr2tksDXMoxFvkYfNJJsjRSzf3fvbVWvrg_v8AWD_0ygf_AMeYf_E1-ycZZxjMxzariPaSjGKjGKUnZKKW1raN80v-3m_X4DIcFTwuAhHlTlK8m2rtybvrtayajb_CvP8Akx_4L8fsEeB_2OfjL4U1j4caVpugaJ4wspXn0a1tZVisZYSmXEhLRnzBIvyKUKshb5vM-T8-K_ff_g6R0m3uPgl8MbqWLdPBr1wiMeytbbmH_fSL_wB81_O7b6h5wAfr2f8Axr8FzCUnipzm7ybvfdu_Vt7vufp2H_hRS6IuUUUfGv79v_Y6W_L9_g_D_v_6p7g"
+};
+
 export default function App() {
   const posterRef = useRef(null);
-  const fileInputRef = useRef(null);
-  
-  // הגדרת ברירת מחדל לירוק העמוק והיפה מהצילום מסך שלך
-  const [bgColor, setBgColor] = useState('#1e8a5f'); 
-  const [textColor, setTextColor] = useState('#ffffff');
+  const [bgColor, setBgColor] = useState('#f2f9f1');
+  const [textColor, setTextColor] = useState('#111827');
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
-  const [selectedMovement, setSelectedMovement] = useState('ba');
-  const [customLogo, setCustomLogo] = useState('');
-  
   const [schedule, setSchedule] = useState([
     { id: 1, name: 'כניסת שבת', time: '19:30', active: true },
     { id: 2, name: 'פעולת חב"ב', time: '21:00', active: true },
-    { id: 3, name: 'מפקד', time: '15:45', active: true },
-    { id: 4, name: 'מנחה', time: '16:00', active: true },
-    { id: 5, name: 'פעולות', time: '16:30', active: true },
-    { id: 6, name: 'סד"ש', time: '18:00', active: true },
-    { id: 7, name: 'ערבית', time: '19:45', active: true },
-    { id: 8, name: 'מוצ"ש', time: '20:30', active: true }
+    { id: 3, name: 'מפקד', time: '15:45', active: true }
   ]);
 
-  const handleDownload = async () => {
-    if (posterRef.current) {
-      try {
-        const canvas = await html2canvas(posterRef.current, { scale: 2, useCORS: true });
-        const dataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = parasha + '.png';
-        link.href = dataUrl;
-        link.click();
-      } catch (err) {
-        alert('שגיאה בהורדת התמונה.');
-      }
-    }
-  };
-
-  const handleShare = async () => {
-    if (posterRef.current) {
-      try {
-        const canvas = await html2canvas(posterRef.current, { scale: 2, useCORS: true });
-        canvas.toBlob(async (blob) => {
-          if (!blob) return;
-          const file = new File([blob], parasha + '.png', { type: 'image/png' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({ files: [file], title: 'לוח זמני שבת', text: 'מוזמנים להצטרף!' });
-            } catch (err) {
-              // שיתוף בוטל
-            }
-          } else {
-            alert('הדפדפן אינו תומך בשיתוף ישיר. השתמש בהורדה כתמונה.');
-          }
-        });
-      } catch (err) {
-        alert('שגיאה בתהליך השיתוף');
-      }
-    }
-  };
-
-  const handleFile = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setCustomLogo(event.target.result);
-        setSelectedMovement('custom');
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const updateItem = (id, field, value) => {
-    setSchedule(schedule.map((item) => {
-      if (item.id === id) {
-        return { ...item, [field]: value };
-      }
-      return item;
-    }));
-  };
-
-  const addItem = () => {
-    const newItem = { id: Date.now(), name: 'זמן חדש', time: '00:00', active: true };
-    setSchedule([...schedule, newItem]);
-  };
-
-  const deleteItem = (id) => {
-    setSchedule(schedule.filter((item) => item.id !== id));
-  };
-
-  // קביעת נתיב הלוגו הנבחר בהתאם לבחירה
-  let currentLogoSrc = '/ba.jpg';
-  if (selectedMovement === 'ezra') currentLogoSrc = '/ezra.png';
-  if (selectedMovement === 'ariel') currentLogoSrc = '/ariel.webp';
-  if (selectedMovement === 'custom') currentLogoSrc = customLogo;
-
   return (
-    <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh', boxSizing: 'border-box' }}>
-      <style>{`
-        @media print {
-          @page { size: A4; margin: 0; }
-          html, body { margin: 0 !important; padding: 0 !important; height: 297mm !important; overflow: hidden !important; background: white !important; }
-          .no-print { display: none !important; }
-          .print-container { position: absolute !important; top: 0 !important; left: 0 !important; width: 210mm !important; height: 297mm !important; padding: 30mm 25mm !important; border-radius: 0 !important; box-shadow: none !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        }
-      `}</style>
-
-      <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
+      <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }}>
         
-        {/* עמודת ימין: הגדרות */}
-        <div className="no-print" style={{ width: '420px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', boxSizing: 'border-box' }}>
-          <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#111827' }}>הגדרות לוח מודעות</h2>
-          
-          <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-            <div>
-              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px', fontSize: '14px' }}>צבע רקע:</label>
-              <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} style={{ width: '60px', height: '35px', cursor: 'pointer', display: 'block', border: '1px solid #d1d5db', borderRadius: '4px' }} />
-            </div>
-            <div>
-              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px', fontSize: '14px' }}>צבע טקסט:</label>
-              <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} style={{ width: '60px', height: '35px', cursor: 'pointer', display: 'block', border: '1px solid #d1d5db', borderRadius: '4px' }} />
-            </div>
-          </div>
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '10px', fontSize: '14px' }}>סמל התנועה:</label>
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '25px' }}>
-            {[
-              { id: 'ba', name: 'בני-עקיבא', src: '/ba.jpg' },
-              { id: 'ezra', name: 'עזרא', src: '/ezra.png' },
-              { id: 'ariel', name: 'אריאל', src: '/ariel.webp' }
-            ].map((m) => (
-              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75px' }}>
-                <button
-                  type="button"
-                  onClick={() => setSelectedMovement(m.id)}
-                  style={{
-                    width: '65px',
-                    height: '65px',
-                    borderRadius: '12px',
-                    backgroundColor: 'white',
-                    border: selectedMovement === m.id ? '3px solid #2563eb' : '1px solid #d1d5db',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '4px',
-                    cursor: 'pointer',
-                    boxSizing: 'border-box',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <img src={m.src} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </button>
-                <span style={{ fontSize: '12px', marginTop: '6px', fontWeight: selectedMovement === m.id ? 'bold' : 'normal', color: '#374151' }}>{m.name}</span>
-              </div>
-            ))}
-
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75px' }}>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current.click()}
-                style={{
-                  width: '65px',
-                  height: '65px',
-                  borderRadius: '12px',
-                  backgroundColor: '#f3f4f6',
-                  border: selectedMovement === 'custom' ? '3px solid #2563eb' : '1px solid #d1d5db',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '4px',
-                  cursor: 'pointer',
-                  overflow: 'hidden',
-                  boxSizing: 'border-box'
-                }}
-              >
-                {customLogo ? <img src={customLogo} alt="מותאם" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> : <span style={{ fontSize: '24px', color: '#6b7280' }}>+</span>}
-              </button>
-              <span style={{ fontSize: '12px', marginTop: '6px', color: '#374151' }}>מותאם אישית</span>
-            </div>
-          </div>
-
-          <input type="file" ref={fileInputRef} accept="image/*" onChange={handleFile} style={{ display: 'none' }} />
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px', fontSize: '14px' }}>שם הפרשה:</label>
-          <input type="text" value={parasha} onChange={(e) => setParasha(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '15px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box' }} />
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px', fontSize: '14px' }}>כיתוב תחתון:</label>
-          <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '6px', border: '1px solid #d1d5db', boxSizing: 'border-box' }} />
-
-          <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '10px', fontSize: '14px' }}>זמני השבת:</label>
-          <div style={{ maxHeight: '280px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px', backgroundColor: '#f9fafb', marginBottom: '15px' }}>
-            {schedule.map((item) => (
-              <div key={item.id} style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
-                <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ padding: '6px', borderRadius: '6px', border: '1px solid #d1d5db' }} />
-                <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: '1', padding: '7px', borderRadius: '6px', border: '1px solid #d1d5db' }} />
-                <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-                <button type="button" onClick={() => deleteItem(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px' }}>🗑️</button>
-              </div>
-            ))}
-          </div>
-          
-          <button type="button" onClick={addItem} style={{ width: '100%', padding: '11px', backgroundColor: '#f3f4f6', border: '1px solid #d1d5db', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#374151', marginBottom: '25px' }}>+ הוסף זמן חדש</button>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <button type="button" onClick={handleDownload} style={{ padding: '14px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none', fontSize: '16px' }}>⬇️ הורדה כתמונה</button>
-            <button type="button" onClick={handleShare} style={{ padding: '14px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none', fontSize: '16px' }}>📤 שיתוף</button>
-            <button type="button" onClick={() => window.print()} style={{ padding: '14px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none', fontSize: '16px' }}>🖨️ הדפסה (A4)</button>
-          </div>
+        {/* פאנל הגדרות */}
+        <div style={{ width: '400px', backgroundColor: 'white', padding: '20px', borderRadius: '12px' }}>
+          <h2>הגדרות</h2>
+          <label>צבע רקע:</label>
+          <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} />
+          <br/>
+          <label>צבע טקסט:</label>
+          <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+          <br/><br/>
+          <input value={parasha} onChange={(e) => setParasha(e.target.value)} placeholder="שם הפרשה" style={{width:'100%', padding:'8px'}}/>
         </div>
 
-        {/* עמודת שמאל: תצוגה מקדימה נקייה של הפוסטר (בדיוק כמו בצילום מסך) */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-          <div 
-            ref={posterRef} 
-            className="print-container" 
-            style={{ 
-              width: '550px', 
-              height: '778px', 
-              padding: '45px 50px', 
-              borderRadius: '16px', 
-              backgroundColor: bgColor, 
-              position: 'relative', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              boxSizing: 'border-box',
-              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)'
-            }}
-          >
-            {/* מיקום הלוגו ישירות על הרקע ללא עיגול לבן מלאכותי, בדיוק לפי המקור */}
-            <div style={{ width: '110px', height: '110px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
-              {currentLogoSrc && (
-                <img 
-                  src={currentLogoSrc} 
-                  alt="סמל תנועה" 
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-                />
-              )}
-            </div>
-            
-            <h1 style={{ fontSize: '48px', marginTop: '0px', marginBottom: '12px', fontWeight: 'bold', color: textColor, textAlign: 'center' }}>שבת שלום</h1>
-            
-            <div style={{ display: 'inline-block', padding: '6px 32px', backgroundColor: '#ffffff', borderRadius: '25px', marginBottom: '40px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937' }}>{parasha}</span>
-            </div>
-            
-            {/* רשימת הזמנים עם קו מקווקו ביניהם לפי העיצוב */}
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {schedule.map((item) => {
-                if (!item.active) return null;
-                return (
-                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '2px dashed ' + textColor + '66', paddingBottom: '6px' }}>
-                    <span style={{ fontSize: '22px', fontWeight: 'bold', color: textColor }}>{item.name}</span>
-                    <span style={{ fontSize: '24px', fontWeight: 'bold', color: textColor, fontFamily: 'sans-serif' }}>{item.time}</span>
-                  </div>
-                );
-              })}
-            </div>
-            
-            <div style={{ marginTop: 'auto', fontWeight: 'bold', borderTop: '2px solid ' + textColor + '44', width: '100%', textAlign: 'center', paddingTop: '16px', fontSize: '18px', color: textColor }}>
-              {footerText}
-            </div>
+        {/* תצוגה מקדימה */}
+        <div ref={posterRef} style={{ width: '550px', height: '778px', padding: '50px', backgroundColor: bgColor, borderRadius: '16px', position: 'relative', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+          {/* הלוגו בפינה שמאלית למעלה בתוך עיגול לבן */}
+          <div style={{ position: 'absolute', top: '35px', left: '35px', width: '90px', height: '90px', backgroundColor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5px' }}>
+            <img src={LOGOS.ba} alt="logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
+          
+          <h1 style={{ textAlign: 'center', color: textColor, marginTop: '20px' }}>שבת שלום</h1>
+          <h2 style={{ textAlign: 'center', color: textColor }}>{parasha}</h2>
         </div>
-
       </div>
     </div>
   );
