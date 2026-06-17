@@ -11,7 +11,7 @@ export default function App() {
   const posterRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const [bgColor, setBgColor] = useState('#f2f9f1');
+  const [bgColor, setBgColor] = useState('#b6eef2');
   const [textColor, setTextColor] = useState('#111827');
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
