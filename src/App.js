@@ -71,10 +71,10 @@ export default function App() {
 
   return (
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
-      {/* פה הגדרנו את ה-Container כ-Flex כדי שההגדרות יהיו מימין */}
+      {/* Container - ב-RTL, הילד הראשון יהיה מימין */}
       <div style={{ display: 'flex', gap: '40px', justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap', maxWidth: '1100px', margin: '0 auto' }}>
         
-        {/* צד ימין: פאנל הגדרות (הסדר ב-DOM קובע את המיקום ב-RTL) */}
+        {/* צד ימין: פאנל הגדרות */}
         <div style={{ width: '400px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
           <h2 style={{ marginTop: 0 }}>הגדרת לו"ז שבת</h2>
 
@@ -115,9 +115,13 @@ export default function App() {
             <button onClick={addItem} style={{ width: '100%', marginTop: '5px' }}>+ הוסף זמן</button>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={handleDownload} style={{ flex: 2, padding: '10px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px' }}>⬇️ הורדה כתמונה</button>
-            <button onClick={handleShare} style={{ flex: 1, padding: '10px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px' }}>📤 שתף</button>
+          {/* אזור הכפתורים החדש */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button onClick={handleShare} style={{ width: '100%', padding: '12px', background: '#059669', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>📤 שתף</button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={handleDownload} style={{ flex: 1, padding: '12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>⬇️ הורדה</button>
+                <button onClick={() => window.print()} style={{ flex: 1, padding: '12px', background: '#374151', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>🖨️ הדפסה</button>
+            </div>
           </div>
         </div>
 
