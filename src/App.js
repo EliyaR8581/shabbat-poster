@@ -18,21 +18,21 @@ export default function App() {
   const [selectedMovement, setSelectedMovement] = useState('ba');
   const [customLogo, setCustomLogo] = useState('');
   const [schedule, setSchedule] = useState([
-    { id: 1, name: 'כניסת שבת', time: '19:30', active: true },
-    { id: 2, name: 'פעולת חב"ב', time: '21:00', active: true },
-    { id: 3, name: 'מפקד', time: '15:45', active: true },
-    { id: 4, name: 'מנחה', time: '16:00', active: true },
-    { id: 5, name: 'פעולות', time: '16:30', active: true },
-    { id: 6, name: 'סד"ש', time: '18:00', active: true },
-    { id: 7, name: 'ערבית', time: '19:45', active: true },
-    { id: 8, name: 'מוצ"ש', time: '20:30', active: true }
+    { id: 1, name: 'כניסת שבת', time: '19:30' },
+    { id: 2, name: 'פעולת חב"ב', time: '21:00' },
+    { id: 3, name: 'מפקד', time: '15:45' },
+    { id: 4, name: 'מנחה', time: '16:00' },
+    { id: 5, name: 'פעולות', time: '16:30' },
+    { id: 6, name: 'סד"ש', time: '18:00' },
+    { id: 7, name: 'ערבית', time: '19:45' },
+    { id: 8, name: 'מוצ"ש', time: '20:30' }
   ]);
 
   const updateItem = (id, field, value) => {
     setSchedule(schedule.map(item => item.id === id ? { ...item, [field]: value } : item));
   };
 
-  const addItem = () => setSchedule([...schedule, { id: Date.now(), name: 'זמן חדש', time: '00:00', active: true }]);
+  const addItem = () => setSchedule([...schedule, { id: Date.now(), name: 'זמן חדש', time: '00:00' }]);
   const deleteItem = (id) => setSchedule(schedule.filter(item => item.id !== id));
 
   const handleFile = (e) => {
@@ -79,13 +79,21 @@ export default function App() {
       justifyContent: 'center',
       fontFamily: 'sans-serif' 
     }}>
-      {/* חוקי עיצוב מיוחדים להדפסה בלבד */}
+      
+      {/* חוקי עיצוב קשוחים להדפסה בעמוד אחד בלבד */}
       <style>{`
         @media print {
-          body {
-            background: none !important;
+          @page {
+            size: A4 portrait;
+            margin: 0 !important;
+          }
+          html, body {
+            height: 100vh !important;
+            overflow: hidden !important;
             margin: 0 !important;
             padding: 0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
           .no-print {
             display: none !important;
@@ -95,17 +103,19 @@ export default function App() {
             margin: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
+            height: 100vh !important;
           }
           .poster-to-print {
-            width: 99vw !important;
-            height: 99vh !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
             box-shadow: none !important;
             border-radius: 0 !important;
-            padding: 40px !important;
+            padding: 50px !important;
             box-sizing: border-box !important;
+            overflow: hidden !important;
             page-break-inside: avoid !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            page-break-after: avoid !important;
           }
         }
       `}</style>
@@ -120,7 +130,7 @@ export default function App() {
         maxWidth: '1050px'
       }}>
         
-        {/* פאנל הגדרות - יוסתר אוטומטית בהדפסה בזכות ה-class */}
+        {/* צד ימין: פאנל הגדרות */}
         <div className="no-print" style={{ width: '400px', flexShrink: 0, backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
           <h2 style={{ marginTop: 0 }}>הגדרת לו"ז שבת</h2>
 
@@ -156,7 +166,7 @@ export default function App() {
           <div style={{ marginBottom: '20px' }}>
             {schedule.map(item => (
               <div key={item.id} style={{ display: 'flex', gap: '5px', marginBottom: '5px' }}>
-                <input type="checkbox" checked={item.active} onChange={(e) => updateItem(item.id, 'active', e.target.checked)} />
+                {/* סימון ה-V הוסר מכאן לחלוטין */}
                 <input type="time" value={item.time} onChange={(e) => updateItem(item.id, 'time', e.target.value)} style={{ width: '80px' }} />
                 <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} style={{ flex: 1 }} />
                 <button onClick={() => deleteItem(item.id)} style={{ border: 'none', cursor: 'pointer', background: 'transparent' }}>🗑️</button>
@@ -174,7 +184,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* הפוסטר - יתרחב לגודל מלא וישמור על צבעיו בהדפסה בזכות ה-class */}
+        {/* צד שמאל: פוסטר */}
         <div ref={posterRef} className="poster-to-print" style={{ width: '550px', flexShrink: 0, height: '778px', padding: '50px', borderRadius: '16px', backgroundColor: bgColor, color: textColor, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }}>
           <div style={{ position: 'absolute', top: '35px', left: '35px', width: '85px', height: '85px', backgroundColor: 'white', borderRadius: '50%', padding: '6px', overflow: 'hidden' }}>
             <img src={selectedMovement === 'custom' ? customLogo : LOGOS[selectedMovement]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
@@ -183,7 +193,7 @@ export default function App() {
           <h2 style={{ fontSize: '22px', padding: '6px 28px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '25px', fontWeight: 'bold' }}>{parasha}</h2>
           
           <div style={{ width: '100%', marginTop: '20px' }}>
-            {schedule.filter(i => i.active).map(i => (
+            {schedule.map(i => (
               <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(0,0,0,0.1)', padding: '5px 0' }}>
                 <span style={{ fontSize: '22px', fontWeight: 'bold' }}>{i.name}</span>
                 <span style={{ fontSize: '24px', fontWeight: 'bold' }}>{i.time}</span>
