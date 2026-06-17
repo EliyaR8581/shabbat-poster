@@ -70,9 +70,19 @@ export default function App() {
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
       <style>{`
         @media print {
+          @page { size: A4 portrait; margin: 0; }
           body * { visibility: hidden; }
           .print-container, .print-container * { visibility: visible; }
-          .print-container { position: absolute; left: 0; top: 0; width: 100%; }
+          .print-container { 
+            position: absolute; 
+            left: 0; 
+            top: 0; 
+            width: 210mm !important; 
+            height: 297mm !important; 
+            margin: 0 !important;
+            padding: 40px !important;
+            box-sizing: border-box;
+          }
         }
       `}</style>
 
@@ -93,8 +103,6 @@ export default function App() {
           <input type="text" value={footerText} onChange={(e) => setFooterText(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '20px' }} />
 
           <h3 style={{ fontWeight: 'bold', marginTop: '15px' }}>זמני השבת:</h3>
-          <p style={{ fontSize: '13px', color: '#555', marginBottom: '10px' }}>* עריכת פעולות ושעות:</p>
-          
           <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
             {schedule.map((item) => (
               <div key={item.id} style={{ display: 'flex', gap: '10px', marginBottom: '8px', padding: '6px', backgroundColor: '#f9fafb' }}>
@@ -110,7 +118,7 @@ export default function App() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
             <button onClick={handleDownload} style={{ padding: '12px', backgroundColor: '#2563eb', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>⬇️ הורדה כתמונה</button>
             <button onClick={handleShare} style={{ padding: '12px', backgroundColor: '#059669', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>📤 שיתוף</button>
-            <button onClick={() => window.print()} style={{ padding: '12px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>🖨️ הדפסה</button>
+            <button onClick={() => window.print()} style={{ padding: '12px', backgroundColor: '#374151', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>🖨️ הדפסה (A4)</button>
           </div>
         </div>
 
