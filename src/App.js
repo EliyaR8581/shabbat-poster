@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 
 export default function App() {
   const posterRef = useRef(null);
-  const [bgColor, setBgColor] = useState('#66bb6a'); // מעודכן לירוק היפה מהתמונה שלך
+  const [bgColor, setBgColor] = useState('#f2f9f1'); // חזרנו לצבע הבהיר המקורי
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
   const [customLogo, setCustomLogo] = useState('');
@@ -113,7 +113,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* טור תצוגה מקדימה - גרסת A4 מוגדלת לחוויית שימוש משופרת */}
+        {/* טור תצוגה מקדימה - גרסת A4 מוגדלת */}
         <div style={{ flex: '1.5', display: 'flex', justifyContent: 'center' }}>
           <div 
             ref={posterRef} 
