@@ -100,27 +100,7 @@ export default function App() {
   };
 
   // פונקציה שמציגה סמל מעוצב חלופי אם הקובץ הפיזי חסר בשרת
-  const renderLogoPlaceholder = (id, name) => {
-    return (
-      <div style={{
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        backgroundColor: '#004b87',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '11px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        padding: '2px',
-        boxSizing: 'border-box'
-      }}>
-        {name}
-      </div>
-    );
-  };
+
 
   return (
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh', boxSizing: 'border-box' }}>
