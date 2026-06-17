@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 
 export default function App() {
   const posterRef = useRef(null);
-  const [bgColor, setBgColor] = useState('#f2f9f1'); // חזרנו לצבע הבהיר המקורי
+  const [bgColor, setBgColor] = useState('#f2f9f1');
   const [parasha, setParasha] = useState('פרשת השבוע');
   const [footerText, setFooterText] = useState('צוות הדרכה');
   const [customLogo, setCustomLogo] = useState('');
@@ -68,17 +68,45 @@ export default function App() {
 
   return (
     <div style={{ direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
+      {/* חוקי הדפסה מתקדמים למניעת עמודים מיותרים ומילוי דף ה-A4 במלואו */}
       <style>{`
         @media print {
-          body * { visibility: hidden; }
-          .print-container, .print-container * { visibility: visible; }
-          .print-container { position: absolute; left: 0; top: 0; width: 100%; }
+          @page {
+            size: A4;
+            margin: 0;
+          }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 297mm !important;
+            overflow: hidden !important;
+            background: white !important;
+          }
+          /* מעלים לחלוטין את כל מה שהוא לא הפוסטר מחישוב הגובה */
+          .no-print {
+            display: none !important;
+          }
+          /* הופך את הפוסטר לגודל המקסימלי של דף המדפסת */
+          .print-container {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            padding: 30mm 25mm !important; /* מרווח פנימי יפה להדפסה */
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            box-sizing: border-box !important;
+            /* מבטיח שצבע הרקע יודפס */
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
         }
       `}</style>
 
       <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-        {/* טור הגדרות */}
-        <div style={{ flex: '1', minWidth: '320px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+        {/* טור הגדרות - קיבל מחלקה no-print כדי שלא ייכנס להדפסה בשום צורה */}
+        <div className="no-print" style={{ flex: '1', minWidth: '320px', backgroundColor: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
           <h2>הגדרות לוח מודעות</h2>
           
           <label style={{ display: 'block', fontWeight: 'bold', marginTop: '10px' }}>צבע רקע:</label>
@@ -113,7 +141,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* טור תצוגה מקדימה - גרסת A4 מוגדלת */}
+        {/* טור תצוגה מקדימה */}
         <div style={{ flex: '1.5', display: 'flex', justifyContent: 'center' }}>
           <div 
             ref={posterRef} 
